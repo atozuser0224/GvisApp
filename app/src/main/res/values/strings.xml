@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">GvisApp</string>
+    <string name="Home">Home</string>
+    <string name="health">건강</string>
+    <string name="food">음식</string>
+    <string name="moreInfo">더 보기</string>
+</resources>
