@@ -1,6 +1,9 @@
 package com.example.gvisapp
 
+import android.content.Context
 import android.os.Bundle
+import android.view.MotionEvent
+import android.view.inputmethod.InputMethodManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,13 +21,8 @@ import com.example.gvisapp.Food.FoodScreen
 import com.example.gvisapp.ui.theme.GvisAppTheme
 
 class MainActivity : ComponentActivity() {
-    companion object{
-        val foodlist = listOf<Food>(
-            Food("라면",500f,15f,20f,10f),//dummy code for test
-            Food("햄버거",50f,100f,40f,100f),
-            Food("이름 겁나긴 햄버거띠",100f,100f,100f,100f)
-        )
-    }
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {

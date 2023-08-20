@@ -1,77 +1,44 @@
 package com.example.gvisapp.Food
 
-import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.spring
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.DinnerDining
-import androidx.compose.material.icons.filled.EmojiFoodBeverage
+import androidx.compose.material.icons.filled.Cancel
 import androidx.compose.material.icons.filled.FoodBank
-import androidx.compose.material.icons.filled.FreeBreakfast
-import androidx.compose.material.icons.filled.LunchDining
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardColors
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
-import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedCard
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.BottomEnd
-import androidx.compose.ui.Alignment.Companion.Center
-import androidx.compose.ui.Alignment.Companion.CenterHorizontally
-import androidx.compose.ui.Alignment.Companion.CenterStart
-import androidx.compose.ui.Alignment.Companion.TopCenter
 import androidx.compose.ui.Alignment.Companion.TopStart
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.example.gvisapp.Food.card.AdviceCard
-import com.example.gvisapp.Food.card.KcalCard
-import com.example.gvisapp.Food.card.NatureCard
-import com.example.gvisapp.composable.BottomNavBar
-import com.example.gvisapp.composable.JamoUtils
-import com.example.gvisapp.composable.MainText
-import com.example.gvisapp.composable.NavRow
-import com.example.gvisapp.composable.SegmentButton
+import com.example.gvisapp.composable.util.BottomNavBar
+import com.example.gvisapp.composable.setTimeDropdownMenuBox
+import com.example.gvisapp.composable.util.MainText
+import com.example.gvisapp.composable.addFoodListItemCard
 import com.example.gvisapp.composable.isEqualKorean
+import com.example.gvisapp.composable.util.def_TextField
 import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.HorizontalPager
-import com.google.accompanist.pager.rememberPagerState
 
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalPagerApi::class)
@@ -84,9 +51,7 @@ fun AddFoodScreen(bottomValue: MutableState<Int>, where: Int?, navController: Na
                     Text(text = "ADD FOOD")
                 },
                 actions = {
-                    IconButton(onClick = { /* Handle action */ }) {
-                        Icon(Icons.Default.Menu, contentDescription = null, Modifier.fillMaxSize())
-                    }
+                    setTimeDropdownMenuBox()
                 }
             )
         },
@@ -117,28 +82,22 @@ fun AddFoodScreen(bottomValue: MutableState<Int>, where: Int?, navController: Na
             val search = remember {
                 mutableStateOf("")
             }
-            var sortedlist = remember {
-                mutableListOf<Food>()
+            val whoClick = remember {
+                mutableStateOf(21000000)
             }
+            val focusManager = LocalFocusManager.current
 
             //ui를 구현하는곳
-            Divider()
-            NavRow(
-                select = select,
-                listOf("아침", "점심", "저녁"),
-                listOf(
-                    Icons.Default.FreeBreakfast,
-                    Icons.Default.LunchDining,
-                    Icons.Default.DinnerDining
-                )
-            )
             Divider()
             Box(
                 modifier = Modifier
                     .fillMaxSize()
             ) {
 
-                Column(Modifier.align(TopStart)) {
+                Column(
+                    Modifier
+                        .align(TopStart)
+                        .offset(y = 5.dp)) {
                     MainText(text = "드신 음식이 있나요?", icon = Icons.Default.FoodBank, onclick = null)
                     Text(
                         text = "아래 리스트에서 선택해주세요!",
@@ -147,70 +106,61 @@ fun AddFoodScreen(bottomValue: MutableState<Int>, where: Int?, navController: Na
                         fontSize = 23.sp,
                         color = Color.Gray
                     )
-                    Row() {
-                        TextField(
-                            value = search.value,
-                            onValueChange = {
-                                search.value = it
-                                foodList.forEachIndexed { index, food ->  //per food
-                                    scoreList[index] = search.value.isEqualKorean(food.name)
-                                }
-                                sortedlist = foodList.mapIndexed{ index, food ->  index to food}.sortedWith(compareBy { scoreList[it.first] }).map { it.second }
-                                    .toMutableList()
-                            },
-                            Modifier
-                                .fillMaxWidth(0.8f)
-                                .height(60.dp)
-                                .padding(5.dp),
-                            singleLine = true,
-                            keyboardOptions = KeyboardOptions.Default
-                        )
-                        IconButton(
-                            onClick = {},
-                            Modifier
-                                .fillMaxWidth()
-                                .height(60.dp)
-                                .padding(5.dp)
-                        ) {
-                            Icon(imageVector = Icons.Default.Search, contentDescription = "search")
+                    def_TextField(text = search, modifier = Modifier
+                        .padding(vertical =  5.dp)
+                        .fillMaxWidth()
+                        .height(75.dp), label = "검색하기", icon = Icons.Default.Cancel, onClick = {
+                            search.value =""
+                            focusManager.clearFocus()
+                    }) {
+                        search.value = it
+                        foodList.forEachIndexed { index, food ->
+                            scoreList[index] = search.value.isEqualKorean(food.name)
                         }
                     }
-
-
-
                     LazyColumn(
                         Modifier
                             .padding()
                             .fillMaxWidth()
                             .height(400.dp)
-                            .padding(10.dp)
+                            .padding(bottom = 10.dp)
+
                     ) {
-                        itemsIndexed(foodList.mapIndexed{ index, food ->  index to food}.filter { scoreList[it.first] > 0 }.sortedWith(compareBy { scoreList[it.first] }).reversed()) { index, food ->//Card list item
-                            if (true){
-                                ElevatedCard(
-                                    Modifier
-                                        .fillMaxWidth()
-                                        .height(70.dp)
-                                        .padding(horizontal = 0.dp, vertical = 2.dp),
-                                    shape = RoundedCornerShape(0.dp)
-                                ) {
-                                    Box(Modifier.fillMaxSize()) {
-                                        Text(
-                                            text = "${food.second.name} , ${scoreList[food.first]} ${JamoUtils.split(food.second.name)}",
-                                            Modifier.align(CenterStart)
-                                        )
+                        if (search.value.isEmpty()){
+                            itemsIndexed(foodList) { index, food ->//Card list item
+                                addFoodListItemCard(text = food.name,color = if (whoClick.value == index )MaterialTheme.colorScheme.primary else null){
+                                    if  (whoClick.value == index){
+                                        whoClick.value =21000000
+                                    }else{
+                                        whoClick.value = index
+                                    }
+                                }
+                            }
+                        }else {
+                            itemsIndexed(foodList.mapIndexed{ index, food ->  index to food}.filter { scoreList[it.first] > 0 }.sortedWith(compareBy { scoreList[it.first] }).reversed()) { index, item ->//Card list item
+                                addFoodListItemCard(text = item.second.name,color = if (whoClick.value == item.first )MaterialTheme.colorScheme.primary else null){
+                                    if  (whoClick.value == item.first){
+                                        whoClick.value =21000000
+                                    }else{
+                                        whoClick.value = item.first
+
                                     }
                                 }
                             }
                         }
+
                     }
                 }
+                Text(text = if (whoClick.value == 21000000)"보기에 없으신가요?" else "",modifier = Modifier
+                    .align(BottomEnd)
+                    .offset(x = (-15).dp, y = -(60).dp), fontWeight = FontWeight.ExtraLight, fontSize = 16.sp,color = Color.Gray
+                )
                 Button(
                     onClick = {}, modifier = Modifier
                         .align(BottomEnd)
                         .padding(10.dp)
                 ) {
-                    Text(text = "다음으로")
+                    Text(text = if (whoClick.value == 21000000)"새로 추가" else "다음으로")
                 }
 
             }

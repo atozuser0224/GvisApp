@@ -1,25 +1,43 @@
 package com.example.gvisapp.composable
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DinnerDining
 import androidx.compose.material.icons.filled.FreeBreakfast
 import androidx.compose.material.icons.filled.LunchDining
 import androidx.compose.material.icons.filled.MenuBook
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Divider
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -29,6 +47,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.gvisapp.composable.util.MainText
 
 @Composable
 fun BoxScope.FoodCardText(text:String,modifier: Modifier? = Modifier){
@@ -41,10 +60,10 @@ fun BoxScope.FoodCardText(text:String,modifier: Modifier? = Modifier){
 }
 @Composable//영양소 구문에서 칼로리 지방 단백질을 표시함
 fun BoxScope.FoodScreenText(title:String,value:Int,offset: Dp,color: Color?,suffix:String){
-    Text("$title : $value $suffix",modifier =  Modifier
+    Text("$title : $value $suffix",modifier = Modifier
         .align(Alignment.TopEnd)
         .offset(x = (-120).dp, y = 120.dp + offset)
-        .padding(start = ((value.toString().length*20).dp))
+        .padding(start = ((value.toString().length * 20).dp))
    )
 
 }
@@ -140,4 +159,78 @@ enum class FoodTime(){
     BREAKFAST,
     LUNCH,
     DINNER
+}
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun addFoodListItemCard(text: String,color: Color?,onclick: () -> Unit) {
+    Column() {
+        ElevatedCard(onClick = onclick,
+            Modifier
+                .fillMaxWidth()
+                .height(70.dp)
+                .padding(horizontal = 0.dp, vertical = 0.dp),
+            shape = RoundedCornerShape(0.dp), colors = CardDefaults.elevatedCardColors(
+                containerColor = color?: MaterialTheme.colorScheme.surfaceVariant
+            ),
+        ) {
+            Box(Modifier.fillMaxSize()) {
+                Text(
+                    text = text,
+                    Modifier.align(Alignment.CenterStart)
+                )
+            }
+        }
+    }
+    Divider(Modifier.height(0.2.dp), color = MaterialTheme.colorScheme.onBackground)
+
+}
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun setTimeDropdownMenuBox() {
+    val coffeeDrinks = arrayOf("아침", "점심", "저녁")
+    var expanded by remember { mutableStateOf(false) }
+    var selectedText by remember { mutableStateOf(coffeeDrinks[0]) }
+
+    Box(
+        modifier = Modifier
+            .width(100.dp)
+            .padding(start = 2.dp, top = 10.dp)
+
+    ) {
+        ExposedDropdownMenuBox(
+            expanded = expanded,
+            onExpandedChange = {
+                expanded = !expanded
+            }
+        ) {
+            TextField(
+                value = selectedText,
+                onValueChange = {},
+                readOnly = true,
+                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+                modifier = Modifier.menuAnchor(),
+                colors = TextFieldDefaults.textFieldColors(
+                    focusedIndicatorColor = Color.Transparent,
+                    disabledIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent,
+                    containerColor = Color.Transparent
+                )
+            )
+
+            ExposedDropdownMenu(
+                expanded = expanded,
+                onDismissRequest = { expanded = false }
+            ) {
+                coffeeDrinks.forEach { item ->
+                    DropdownMenuItem(
+                        text = { Text(text = item) },
+                        onClick = {
+                            selectedText = item
+                            expanded = false
+                        }
+                    )
+                }
+            }
+        }
+    }
 }

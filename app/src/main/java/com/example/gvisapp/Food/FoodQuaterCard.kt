@@ -28,7 +28,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.gvisapp.composable.DrawLineGraph
+import com.example.gvisapp.composable.util.DrawLineGraph
 import com.example.gvisapp.composable.FoodCardText
 import com.example.gvisapp.composable.FoodTime
 
