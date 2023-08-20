@@ -95,10 +95,10 @@ fun FoodScreen(bottomValue: MutableState<Int>, where: Int?, navController: NavHo
                         Text(text = "아주 멋진 식단을 가지고 계시군요",Modifier.padding(10.dp), fontSize = 24.sp)
                         KcalCard(perAnime = perAnime)
                         Text(text = "오늘 먹은 음식의 영양소에요",Modifier.padding(10.dp), fontSize = 24.sp)
-                        NatureCard(perAnime = perAnime)
+                        NatureCard()
                         Text(text = "이런 음식은 어떠세요?",Modifier.padding(10.dp), fontSize = 24.sp)
                         Text(text = "당신을 위한 음식입니다.",Modifier.padding(horizontal = 10.dp, vertical = 0.dp), fontSize = 20.sp, color = Color.Gray)
-                        AdviceCard(navController)
+                        AdviceCard(navController,it)
                         
                         
                         

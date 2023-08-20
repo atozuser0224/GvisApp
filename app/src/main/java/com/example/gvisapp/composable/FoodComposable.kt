@@ -186,10 +186,8 @@ fun addFoodListItemCard(text: String,color: Color?,onclick: () -> Unit) {
 }
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun setTimeDropdownMenuBox() {
-    val coffeeDrinks = arrayOf("아침", "점심", "저녁")
+fun setTimeDropdownMenuBox(items:Array<String>,selectedText : MutableState<String>) {
     var expanded by remember { mutableStateOf(false) }
-    var selectedText by remember { mutableStateOf(coffeeDrinks[0]) }
 
     Box(
         modifier = Modifier
@@ -204,7 +202,7 @@ fun setTimeDropdownMenuBox() {
             }
         ) {
             TextField(
-                value = selectedText,
+                value = selectedText.value,
                 onValueChange = {},
                 readOnly = true,
                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
@@ -221,11 +219,11 @@ fun setTimeDropdownMenuBox() {
                 expanded = expanded,
                 onDismissRequest = { expanded = false }
             ) {
-                coffeeDrinks.forEach { item ->
+                items.forEach { item ->
                     DropdownMenuItem(
                         text = { Text(text = item) },
                         onClick = {
-                            selectedText = item
+                            selectedText.value = item
                             expanded = false
                         }
                     )

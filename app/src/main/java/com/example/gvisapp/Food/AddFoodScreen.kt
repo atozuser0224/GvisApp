@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Cancel
 import androidx.compose.material.icons.filled.FoodBank
@@ -44,6 +45,14 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalPagerApi::class)
 @Composable
 fun AddFoodScreen(bottomValue: MutableState<Int>, where: Int?, navController: NavHostController) {
+    val selectTime = remember {
+        mutableStateOf(when(where){
+            0->"아침"
+            1->"점심"
+            2->"저녁"
+            else ->"간식"
+        })
+    }
     Scaffold(
         topBar = {
             TopAppBar(
@@ -51,7 +60,7 @@ fun AddFoodScreen(bottomValue: MutableState<Int>, where: Int?, navController: Na
                     Text(text = "ADD FOOD")
                 },
                 actions = {
-                    setTimeDropdownMenuBox()
+                    setTimeDropdownMenuBox(arrayOf("아침","점심","저녁","간식"),selectTime)
                 }
             )
         },
@@ -107,9 +116,9 @@ fun AddFoodScreen(bottomValue: MutableState<Int>, where: Int?, navController: Na
                         color = Color.Gray
                     )
                     def_TextField(text = search, modifier = Modifier
-                        .padding(vertical =  5.dp)
+                        .padding(vertical = 5.dp)
                         .fillMaxWidth()
-                        .height(75.dp), label = "검색하기", icon = Icons.Default.Cancel, onClick = {
+                        .height(75.dp), label = "검색하기", icon = Icons.Default.Cancel, shape = RoundedCornerShape(15.dp), onClick = {
                             search.value =""
                             focusManager.clearFocus()
                     }) {
@@ -128,7 +137,7 @@ fun AddFoodScreen(bottomValue: MutableState<Int>, where: Int?, navController: Na
                     ) {
                         if (search.value.isEmpty()){
                             itemsIndexed(foodList) { index, food ->//Card list item
-                                addFoodListItemCard(text = food.name,color = if (whoClick.value == index )MaterialTheme.colorScheme.primary else null){
+                                addFoodListItemCard(text = food.name,color = if (whoClick.value == index )MaterialTheme.colorScheme.primary else Color.Transparent){
                                     if  (whoClick.value == index){
                                         whoClick.value =21000000
                                     }else{
@@ -138,7 +147,7 @@ fun AddFoodScreen(bottomValue: MutableState<Int>, where: Int?, navController: Na
                             }
                         }else {
                             itemsIndexed(foodList.mapIndexed{ index, food ->  index to food}.filter { scoreList[it.first] > 0 }.sortedWith(compareBy { scoreList[it.first] }).reversed()) { index, item ->//Card list item
-                                addFoodListItemCard(text = item.second.name,color = if (whoClick.value == item.first )MaterialTheme.colorScheme.primary else null){
+                                addFoodListItemCard(text = item.second.name,color = if (whoClick.value == item.first )MaterialTheme.colorScheme.primary else Color.Transparent){
                                     if  (whoClick.value == item.first){
                                         whoClick.value =21000000
                                     }else{

@@ -118,7 +118,7 @@ fun KcalCard(perAnime:Float) {
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun NatureCard(perAnime:Float) {
+fun NatureCard() {
     ElevatedCard(
         modifier = Modifier
             .fillMaxWidth()
@@ -141,9 +141,9 @@ fun NatureCard(perAnime:Float) {
                     Canvas(modifier = Modifier
                         .padding(start = 10.dp, top = 80.dp, end = 30.dp)
                         .size(160.dp)){
-                        DrawLineGraph(100-(60*perAnime).toInt(),20f,130f, Color.Red)
-                        DrawLineGraph(100-(20*perAnime).toInt(),20f,250f, Color.Magenta)
-                        DrawLineGraph(100-(40*perAnime).toInt(),20f,370f, Color.Cyan)
+                        DrawLineGraph(40,20f,130f, Color.Red)
+                        DrawLineGraph(20,20f,250f, Color.Magenta)
+                        DrawLineGraph(50,20f,370f, Color.Cyan)
                     }
                     FoodScreenText(title = "당류", value =  foodlist[pager].sugar, offset = 0.dp, color = Color.Red,"g")
                     FoodScreenText(title = "지방", value =  foodlist[pager].fats, offset = 45.dp, color = Color.Magenta,"g")
@@ -164,7 +164,7 @@ fun NatureCard(perAnime:Float) {
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun AdviceCard(navController: NavController) {
+fun AdviceCard(navController: NavController,time:Int) {
     //더미 정보입니다. 서버와 연결시 제거 요망
     val adviceFood = listOf<String>("커피","햄버거","소고기")
     val adviceNature = listOf<List<String>>(listOf("카페인","수분"), listOf("단백질","지방","탄수화물"), listOf("단백질"))
@@ -200,7 +200,7 @@ fun AdviceCard(navController: NavController) {
                 OutlinedButton(modifier = Modifier
                     .align(Alignment.BottomEnd)
                     .padding(10.dp),onClick = {
-                    navController.navigate("AddFood/${1}")
+                    navController.navigate("AddFood/${if (time==0)it else time-1}")
                 }) {
                     Text(text = "추가하기", fontSize = 15.sp)
                 }
