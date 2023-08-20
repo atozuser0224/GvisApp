@@ -1,5 +1,6 @@
 package com.example.gvisapp.composable
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
@@ -101,6 +102,19 @@ fun NavRow(select: MutableState<Int>){
                 2 -> Icons.Default.LunchDining
                 else -> Icons.Default.DinnerDining
             },color = if (select.value == it) MaterialTheme.colorScheme.primary else Color.Gray) {
+                select.value = it
+            }
+        }
+    }
+}
+@Composable
+fun NavRow(select: MutableState<Int>,list : List<String>,iconList : List<ImageVector>){
+    LazyRow(
+        Modifier
+            .fillMaxWidth()
+            .height(60.dp), horizontalArrangement = Arrangement.SpaceEvenly) {
+        items(list.size){
+            TextButtonNavBar(title = list[it], icon = iconList[it],color = if (select.value == it) MaterialTheme.colorScheme.primary else Color.Gray) {
                 select.value = it
             }
         }

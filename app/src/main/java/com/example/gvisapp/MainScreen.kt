@@ -22,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
+import com.example.gvisapp.Food.Food
 import com.example.gvisapp.Food.card.FoodCard
 import com.example.gvisapp.composable.BottomNavBar
 
@@ -30,7 +31,7 @@ import com.example.gvisapp.composable.BottomNavBar
 @Composable
 fun MainScreen(bottomValue: MutableState<Int>,navController: NavController){
 
-    Scaffold(
+    Scaffold(// 제목과 메뉴아이콘을 표시하는 탑 네비게이션 입니다.
         topBar = {
             TopAppBar(
                 title = {
@@ -43,12 +44,15 @@ fun MainScreen(bottomValue: MutableState<Int>,navController: NavController){
                 }
             )
         },
-        bottomBar = {
+        bottomBar = {//바텀 네비게이션입니다.
             BottomNavBar(bottomValue,navController = navController)
         },
-    ){ innerPadding ->
+    ){ innerPadding ->//메인 스크린 ui구현부 입니다.
+
+
+
         Column(modifier = Modifier.padding(innerPadding)) {
-            Divider(Modifier.fillMaxWidth())
+            Divider()
             FoodCard(navController)
         }
     }

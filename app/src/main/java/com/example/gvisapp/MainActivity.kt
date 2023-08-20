@@ -13,10 +13,18 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.gvisapp.Food.AddFoodScreen
+import com.example.gvisapp.Food.Food
 import com.example.gvisapp.Food.FoodScreen
 import com.example.gvisapp.ui.theme.GvisAppTheme
 
 class MainActivity : ComponentActivity() {
+    companion object{
+        val foodlist = listOf<Food>(
+            Food("라면",500f,15f,20f,10f),//dummy code for test
+            Food("햄버거",50f,100f,40f,100f),
+            Food("이름 겁나긴 햄버거띠",100f,100f,100f,100f)
+        )
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
