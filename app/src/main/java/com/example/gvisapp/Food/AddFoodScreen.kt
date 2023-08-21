@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -22,22 +23,26 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment.Companion.BottomEnd
 import androidx.compose.ui.Alignment.Companion.TopStart
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.gvisapp.composable.JamoUtils
 import com.example.gvisapp.composable.util.BottomNavBar
 import com.example.gvisapp.composable.setTimeDropdownMenuBox
 import com.example.gvisapp.composable.util.MainText
 import com.example.gvisapp.composable.addFoodListItemCard
 import com.example.gvisapp.composable.isEqualKorean
+import com.example.gvisapp.composable.util.addFocusCleaner
 import com.example.gvisapp.composable.util.def_TextField
 import com.google.accompanist.pager.ExperimentalPagerApi
 
@@ -53,6 +58,8 @@ fun AddFoodScreen(bottomValue: MutableState<Int>, where: Int?, navController: Na
             else ->"간식"
         })
     }
+    val focusRequester by remember { mutableStateOf(FocusRequester()) }
+    val focusManager = LocalFocusManager.current
     Scaffold(
         topBar = {
             TopAppBar(
@@ -70,7 +77,7 @@ fun AddFoodScreen(bottomValue: MutableState<Int>, where: Int?, navController: Na
     ) { innerPadding ->
         Column(
             modifier = Modifier
-                .padding(innerPadding)
+                .padding(innerPadding).fillMaxSize().addFocusCleaner(focusManager)
         ) {
             //더미데이터 생성
             val foodList = listOf<Food>(
@@ -79,7 +86,8 @@ fun AddFoodScreen(bottomValue: MutableState<Int>, where: Int?, navController: Na
                 Food("짜장면", 0f, 0f, 0f, 0f),
                 Food("햄버거", 0f, 0f, 0f, 0f),
                 Food("스파게티", 0f, 0f, 0f, 0f),
-                Food("짜장면", 0f, 0f, 0f, 0f)
+                Food("짜장면", 0f, 0f, 0f, 0f),
+
             )
             val scoreList = remember {
                 mutableListOf(0, 0, 0, 0, 0, 0, 0, 0)
@@ -94,7 +102,6 @@ fun AddFoodScreen(bottomValue: MutableState<Int>, where: Int?, navController: Na
             val whoClick = remember {
                 mutableStateOf(21000000)
             }
-            val focusManager = LocalFocusManager.current
 
             //ui를 구현하는곳
             Divider()
@@ -122,10 +129,18 @@ fun AddFoodScreen(bottomValue: MutableState<Int>, where: Int?, navController: Na
                             search.value =""
                             focusManager.clearFocus()
                     }) {
-                        search.value = it
-                        foodList.forEachIndexed { index, food ->
-                            scoreList[index] = search.value.isEqualKorean(food.name)
+                        var n=0
+                        JamoUtils.splitOne(it[0].toString()).forEach {its->
+                            if (its != "")n+=1
                         }
+                        search.value = it
+                        if (n>=2){
+                            foodList.forEachIndexed { index, food ->
+                                scoreList[index] = search.value.isEqualKorean(food.name)
+                            }
+                        }
+
+
                     }
                     LazyColumn(
                         Modifier
@@ -168,6 +183,8 @@ fun AddFoodScreen(bottomValue: MutableState<Int>, where: Int?, navController: Na
                     onClick = {}, modifier = Modifier
                         .align(BottomEnd)
                         .padding(10.dp)
+                        .width(150.dp)
+                        .height(50.dp)
                 ) {
                     Text(text = if (whoClick.value == 21000000)"새로 추가" else "다음으로")
                 }

@@ -65,9 +65,7 @@ fun FoodScreen(bottomValue: MutableState<Int>, where: Int?, navController: NavHo
         val select = remember {
             mutableStateOf(where!!)
         }
-        var start by remember {
-            mutableStateOf(false)
-        }
+
         Column(modifier = Modifier.padding(innerPadding)) {
             Divider(Modifier.fillMaxWidth())
             NavRow(select)
@@ -78,24 +76,18 @@ fun FoodScreen(bottomValue: MutableState<Int>, where: Int?, navController: NavHo
 
                         //변수
 
-                        val perAnime: Float by animateFloatAsState(if (it == state.currentPage) 1f else 0.000f, animationSpec = spring(
-                            dampingRatio = Spring.DampingRatioLowBouncy,
-                            stiffness = Spring.StiffnessLow
-                        ))
+
                         //런치 이펙트
                         LaunchedEffect(select.value){
                             state.scrollToPage(select.value)
-                        }
-                        LaunchedEffect(Unit){
-                            start = true
                         }
 
                         //ui구현
 
                         Text(text = "아주 멋진 식단을 가지고 계시군요",Modifier.padding(10.dp), fontSize = 24.sp)
-                        KcalCard(perAnime = perAnime)
+                        KcalCard()
                         Text(text = "오늘 먹은 음식의 영양소에요",Modifier.padding(10.dp), fontSize = 24.sp)
-                        NatureCard()
+                        NatureCard(onClick = null)
                         Text(text = "이런 음식은 어떠세요?",Modifier.padding(10.dp), fontSize = 24.sp)
                         Text(text = "당신을 위한 음식입니다.",Modifier.padding(horizontal = 10.dp, vertical = 0.dp), fontSize = 20.sp, color = Color.Gray)
                         AdviceCard(navController,it)

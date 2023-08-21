@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.RestaurantMenu
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -16,9 +17,13 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.example.gvisapp.Food.card.FoodCard
+import com.example.gvisapp.Food.card.NatureCard
 import com.example.gvisapp.composable.util.BottomNavBar
+import com.example.gvisapp.composable.util.MainText
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -47,7 +52,13 @@ fun MainScreen(bottomValue: MutableState<Int>,navController: NavController){
 
         Column(modifier = Modifier.padding(innerPadding)) {
             Divider()
-            FoodCard(navController)
+            MainText(text = stringResource(id = R.string.food), Icons.Default.RestaurantMenu){
+                navController.navigate("Food/${0}")
+            }
+            Text(text = "무엇을 얼마나 먹는지는 아셔야죠!",Modifier.padding(10.dp), fontSize = 24.sp)
+            NatureCard {
+                navController.navigate("Food/${0}")
+            }
         }
     }
 }

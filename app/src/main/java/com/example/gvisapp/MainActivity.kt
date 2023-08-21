@@ -21,7 +21,23 @@ import com.example.gvisapp.Food.FoodScreen
 import com.example.gvisapp.ui.theme.GvisAppTheme
 
 class MainActivity : ComponentActivity() {
+    companion object{
+        var isTextFieldFocused = false
+    }
 
+    override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
+        if (isTextFieldFocused) {
+            val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            inputMethodManager.hideSoftInputFromWindow(currentFocus!!.windowToken, 0)
+            currentFocus!!.clearFocus()
+        }
+
+        return try {
+            super.dispatchTouchEvent(ev)
+        } catch (e: Exception) {
+            true
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

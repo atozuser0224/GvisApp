@@ -49,6 +49,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.gvisapp.R
+import com.example.gvisapp.ui.theme.Purple40
+import com.example.gvisapp.ui.theme.Purple80
+import com.example.gvisapp.ui.theme.PurpleGrey40
+import com.example.gvisapp.ui.theme.PurpleGrey80
 
 fun DrawScope.DrawLineGraph(percent:Int, offsetX: Float, offsetY:Float, color: Color){
 
@@ -85,7 +89,7 @@ fun DrawScope.DrawSlide(offsetX: Float,offsetY: Float,repeat:Int,ans:Int){
     var n =offsetX
     repeat(repeat){
 
-        drawLine(start = Offset(n,offsetY), end = Offset(if (it == ans) n+20f else n,offsetY), color = Color.White,strokeWidth = 30F, cap = StrokeCap.Round)
+        drawLine(start = Offset(n,offsetY), end = Offset(if (it == ans) n+20f else n,offsetY), color = if(it == ans) PurpleGrey80 else Color.White,strokeWidth = 30F, cap = StrokeCap.Round)
         n+=if (it == ans) 70f else 50f
     }
 }

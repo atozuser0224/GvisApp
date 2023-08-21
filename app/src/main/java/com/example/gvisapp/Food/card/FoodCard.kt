@@ -20,26 +20,39 @@ import androidx.compose.material.icons.filled.EnergySavingsLeaf
 import androidx.compose.material.icons.filled.FreeBreakfast
 import androidx.compose.material.icons.filled.LunchDining
 import androidx.compose.material.icons.filled.RestaurantMenu
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.PlainTooltipBox
+import androidx.compose.material3.RichTooltipBox
+import androidx.compose.material3.RichTooltipState
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.rememberRichTooltipState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.CenterEnd
+import androidx.compose.ui.Alignment.Companion.CenterStart
+import androidx.compose.ui.Alignment.Companion.CenterVertically
+import androidx.compose.ui.Alignment.Companion.End
+import androidx.compose.ui.Alignment.Companion.TopEnd
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.gvisapp.Food.Food
-import com.example.gvisapp.Food.FoodQuaterCard
 import com.example.gvisapp.R
 import com.example.gvisapp.composable.util.DrawLineGraph
 import com.example.gvisapp.composable.util.DrawPieGraph
@@ -56,46 +69,17 @@ import com.example.gvisapp.ui.theme.Lunch
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
+import kotlinx.coroutines.launch
+
 val foodlist = listOf<Food>(
     Food(name = "햄버거",500f,25f,15f,10f),
     Food(name = "라면",600f,15f,5f,5f),
     Food(name = "스테이크",1000f,225f,115f,50f))
 
-@Composable
-fun FoodCard(navController: NavController){
-    Column(){
-        MainText(text = stringResource(id = R.string.food), Icons.Default.RestaurantMenu){
-            navController.navigate("Food/${0}")
-        }
-        Text(text = "무엇을 얼마나 먹는지는 아셔야죠!",Modifier.padding(10.dp), fontSize = 24.sp)
-        Box(modifier = Modifier
-            .fillMaxWidth()
-            .height(400.dp)
-            .padding(10.dp)){
-            QuaterCard(num = 1, onclick = {
-                navController.navigate("Food/${1}")
-            }) {
-                FoodQuaterCard("라면",100,50, FoodTime.BREAKFAST)
 
-            }
-            QuaterCard(num = 2, onclick = {
-                navController.navigate("Food/${2}")
-            }) {
-                FoodQuaterCard("햄버거",50,75, FoodTime.LUNCH)
-
-            }
-            QuaterCard(num = 3, onclick = {
-                navController.navigate("Food/${3}")
-            }) {
-                FoodQuaterCard("대충 긴이름을 가진 햄버거",300,90, FoodTime.DINNER)
-            }
-        }
-    }
-
-}
 
 @Composable
-fun KcalCard(perAnime:Float) {
+fun KcalCard() {
     ElevatedCard(
         modifier = Modifier
             .fillMaxWidth()
@@ -107,7 +91,7 @@ fun KcalCard(perAnime:Float) {
             Canvas(modifier = Modifier
                 .padding(start = 20.dp, top = 80.dp)
                 .size(200.dp)){
-                DrawPieGraph(listOf(60*perAnime,20*perAnime,20*perAnime), listOf(BreakFast, Lunch, Dinner))
+                DrawPieGraph(listOf(60f,20f,20f), listOf(BreakFast, Lunch, Dinner))
             }
             FoodScreenText(title = "아침",500, offset = 0.dp, color = BreakFast,"kcal")
             FoodScreenText(title = "점심",500, offset = 45.dp, color = Lunch,"kcal")
@@ -116,9 +100,9 @@ fun KcalCard(perAnime:Float) {
     }
 }
 
-@OptIn(ExperimentalPagerApi::class)
+@OptIn(ExperimentalPagerApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun NatureCard() {
+fun NatureCard(onClick:(()->Unit)?) {
     ElevatedCard(
         modifier = Modifier
             .fillMaxWidth()
@@ -127,17 +111,28 @@ fun NatureCard() {
     ) {
         val pagerstate = rememberPagerState()
         Box(Modifier.fillMaxSize()){
-            Row(modifier = Modifier) {
-                FoodTimeText(n = pagerstate.currentPage)
-                Text(text = foodlist[pagerstate.currentPage].name, color = Color.Gray,modifier = Modifier
-                    .padding(start = 15.dp, top = 20.dp), fontSize = 25.sp, fontWeight = FontWeight.Light)
-            }//mainText 구문
+
+
             HorizontalPager(
                 count = 3,
                 state = pagerstate,
             ) { pager ->
                 Box(Modifier.fillMaxSize()) {
-                    
+                    Box(modifier = Modifier.fillMaxWidth()){
+                        Row(Modifier.align(CenterStart)) {
+                            FoodTimeText(n = pagerstate.currentPage)
+                            Text(text = foodlist[pagerstate.currentPage].name, color = Color.Gray,modifier = Modifier
+                                .padding(start = 15.dp, top = 20.dp), fontSize = 25.sp, fontWeight = FontWeight.Light)
+
+                        }//mainText 구문
+                        onClick?.let{
+                            TextButton(onClick = onClick,Modifier.align(CenterEnd).padding(top=10.dp, end = 10.dp)) {
+                                Text(text = "더보기",
+                                    fontSize = 15.sp)
+                            }
+                        }
+                    }
+
                     Canvas(modifier = Modifier
                         .padding(start = 10.dp, top = 80.dp, end = 30.dp)
                         .size(160.dp)){
@@ -162,7 +157,7 @@ fun NatureCard() {
     }
 }
 
-@OptIn(ExperimentalPagerApi::class)
+@OptIn(ExperimentalPagerApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun AdviceCard(navController: NavController,time:Int) {
     //더미 정보입니다. 서버와 연결시 제거 요망
@@ -209,10 +204,34 @@ fun AdviceCard(navController: NavController,time:Int) {
                     Modifier
                         .align(Alignment.BottomStart)
                         .offset(x = 20.dp, y = (-20).dp)) {
-                    Text(text = "영양소",Modifier.padding(5.dp),color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    Text(text = "영양소",
+                        Modifier
+                            .padding(5.dp)
+                            .align(CenterVertically),color = MaterialTheme.colorScheme.onSurfaceVariant)
                     adviceNature[it].forEachIndexed{i,nature ->
-                        Card(Modifier.padding(horizontal = 2.dp)) {
-                            Text(text = nature,Modifier.padding( 5.dp))
+
+                        Card(Modifier.padding(horizontal = 2.dp), shape = RoundedCornerShape(25.dp)) {
+                            val tooltipState = rememberRichTooltipState(isPersistent = true)
+                            val scope = rememberCoroutineScope()
+                            RichTooltipBox(
+                                title = { Text(nature) },
+                                action = {
+                                    TextButton(
+                                        onClick = { scope.launch { tooltipState.dismiss() } },Modifier.align(alignment = End)
+                                    ) { Text("닫기") }
+                                },
+                                modifier = Modifier
+                                    .padding(10.dp)
+                                    .fillMaxWidth(),
+                                text = { Text("${nature}(은)는 몸에 좋음!") },
+                                tooltipState = tooltipState
+                            ) {
+                                TextButton(onClick = { scope.launch { tooltipState.show() } }) {
+                                    Text(
+                                        text = nature
+                                    )
+                                }
+                            }
                         }
                     }
                 }

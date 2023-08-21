@@ -21,22 +21,26 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
+import com.example.gvisapp.MainActivity.Companion.isTextFieldFocused
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun def_TextField(text:MutableState<String>, modifier: Modifier,label:String,icon:ImageVector,shape:Shape,onClick:()->Unit, onChange: (String) -> Unit) {
     val focusRequester by remember { mutableStateOf(FocusRequester()) }
-    val focusManager = LocalFocusManager.current
     TextField(
         value = text.value,
         onValueChange = onChange,
-        modifier,
+        modifier.focusRequester(focusRequester = focusRequester)
+            .onFocusChanged {
+                isTextFieldFocused = it.isFocused
+            },
         singleLine = true,
         shape = shape,
         keyboardOptions = KeyboardOptions.Default
