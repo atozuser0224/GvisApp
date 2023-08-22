@@ -155,10 +155,10 @@ fun FoodTimeText(n:Int) {
         }, onclick = null
     )
 }
-enum class FoodTime(){
-    BREAKFAST,
-    LUNCH,
-    DINNER
+enum class FoodTime(val kor:String){
+    BREAKFAST("아침"),
+    LUNCH("점심"),
+    DINNER("저녁")
 }
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

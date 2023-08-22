@@ -7,8 +7,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.RestaurantMenu
-import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
@@ -21,7 +21,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.example.gvisapp.Food.card.NatureCard
+import com.example.gvisapp.food.card.NatureCard
 import com.example.gvisapp.composable.util.BottomNavBar
 import com.example.gvisapp.composable.util.MainText
 
@@ -51,12 +51,12 @@ fun MainScreen(bottomValue: MutableState<Int>,navController: NavController){
 
 
         Column(modifier = Modifier.padding(innerPadding)) {
-            Divider()
+            HorizontalDivider()
             MainText(text = stringResource(id = R.string.food), Icons.Default.RestaurantMenu){
                 navController.navigate("Food/${0}")
             }
             Text(text = "무엇을 얼마나 먹는지는 아셔야죠!",Modifier.padding(10.dp), fontSize = 24.sp)
-            NatureCard {
+            NatureCard(navController) {
                 navController.navigate("Food/${0}")
             }
         }

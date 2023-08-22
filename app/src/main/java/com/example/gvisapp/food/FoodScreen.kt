@@ -1,8 +1,5 @@
-package com.example.gvisapp.Food
+package com.example.gvisapp.food
 
-import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.spring
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,8 +9,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
@@ -22,18 +19,16 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.example.gvisapp.Food.card.AdviceCard
-import com.example.gvisapp.Food.card.KcalCard
-import com.example.gvisapp.Food.card.NatureCard
+import com.example.gvisapp.food.card.AdviceCard
+import com.example.gvisapp.food.card.KcalCard
+import com.example.gvisapp.food.card.NatureCard
 
 import com.example.gvisapp.composable.util.BottomNavBar
 import com.example.gvisapp.composable.NavRow
@@ -67,9 +62,9 @@ fun FoodScreen(bottomValue: MutableState<Int>, where: Int?, navController: NavHo
         }
 
         Column(modifier = Modifier.padding(innerPadding)) {
-            Divider(Modifier.fillMaxWidth())
+            HorizontalDivider(Modifier.fillMaxWidth())
             NavRow(select)
-            Divider(Modifier.fillMaxWidth())
+            HorizontalDivider(Modifier.fillMaxWidth())
             HorizontalPager(count = 4, state = state, userScrollEnabled = false) {
                 LazyColumn() {
                     item {
@@ -87,7 +82,7 @@ fun FoodScreen(bottomValue: MutableState<Int>, where: Int?, navController: NavHo
                         Text(text = "아주 멋진 식단을 가지고 계시군요",Modifier.padding(10.dp), fontSize = 24.sp)
                         KcalCard()
                         Text(text = "오늘 먹은 음식의 영양소에요",Modifier.padding(10.dp), fontSize = 24.sp)
-                        NatureCard(onClick = null)
+                        NatureCard(navController,onClick = null)
                         Text(text = "이런 음식은 어떠세요?",Modifier.padding(10.dp), fontSize = 24.sp)
                         Text(text = "당신을 위한 음식입니다.",Modifier.padding(horizontal = 10.dp, vertical = 0.dp), fontSize = 20.sp, color = Color.Gray)
                         AdviceCard(navController,it)

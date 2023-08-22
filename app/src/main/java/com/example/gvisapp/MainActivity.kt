@@ -15,9 +15,9 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.gvisapp.Food.AddFoodScreen
-import com.example.gvisapp.Food.Food
-import com.example.gvisapp.Food.FoodScreen
+import com.example.gvisapp.food.AddFoodScreen
+import com.example.gvisapp.food.AddNewFoodScreen
+import com.example.gvisapp.food.FoodScreen
 import com.example.gvisapp.ui.theme.GvisAppTheme
 
 class MainActivity : ComponentActivity() {
@@ -61,6 +61,9 @@ class MainActivity : ComponentActivity() {
                         }
                         composable("AddFood/{where}") {
                             AddFoodScreen(bottomValue,it.arguments?.getString("where")!!.toInt(),navController)
+                        }
+                        composable("AddNewFood/{where}") {
+                            AddNewFoodScreen(bottomValue,it.arguments?.getString("where")!!.toInt(),navController)
                         }
                     }
                 }

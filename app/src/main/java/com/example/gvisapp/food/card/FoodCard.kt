@@ -1,8 +1,5 @@
-package com.example.gvisapp.Food.card
+package com.example.gvisapp.food.card
 
-import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.spring
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,41 +16,32 @@ import androidx.compose.material.icons.filled.DinnerDining
 import androidx.compose.material.icons.filled.EnergySavingsLeaf
 import androidx.compose.material.icons.filled.FreeBreakfast
 import androidx.compose.material.icons.filled.LunchDining
-import androidx.compose.material.icons.filled.RestaurantMenu
-import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.PlainTooltipBox
 import androidx.compose.material3.RichTooltipBox
-import androidx.compose.material3.RichTooltipState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberRichTooltipState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterEnd
 import androidx.compose.ui.Alignment.Companion.CenterStart
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Alignment.Companion.End
-import androidx.compose.ui.Alignment.Companion.TopEnd
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.example.gvisapp.Food.Food
-import com.example.gvisapp.R
 import com.example.gvisapp.composable.util.DrawLineGraph
 import com.example.gvisapp.composable.util.DrawPieGraph
 import com.example.gvisapp.composable.util.DrawSlide
@@ -61,8 +49,9 @@ import com.example.gvisapp.composable.FoodScreenText
 import com.example.gvisapp.composable.FoodTime
 import com.example.gvisapp.composable.FoodTimeText
 import com.example.gvisapp.composable.util.MainText
-import com.example.gvisapp.composable.util.QuaterCard
 import com.example.gvisapp.composable.util.SegmentButton
+import com.example.gvisapp.test.TestRepository
+import com.example.gvisapp.test.getFoodByID
 import com.example.gvisapp.ui.theme.BreakFast
 import com.example.gvisapp.ui.theme.Dinner
 import com.example.gvisapp.ui.theme.Lunch
@@ -70,13 +59,6 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.launch
-
-val foodlist = listOf<Food>(
-    Food(name = "햄버거",500f,25f,15f,10f),
-    Food(name = "라면",600f,15f,5f,5f),
-    Food(name = "스테이크",1000f,225f,115f,50f))
-
-
 
 @Composable
 fun KcalCard() {
@@ -102,7 +84,7 @@ fun KcalCard() {
 
 @OptIn(ExperimentalPagerApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun NatureCard(onClick:(()->Unit)?) {
+fun NatureCard(navController: NavController,onClick:(()->Unit)?) {
     ElevatedCard(
         modifier = Modifier
             .fillMaxWidth()
@@ -117,34 +99,51 @@ fun NatureCard(onClick:(()->Unit)?) {
                 count = 3,
                 state = pagerstate,
             ) { pager ->
-                Box(Modifier.fillMaxSize()) {
-                    Box(modifier = Modifier.fillMaxWidth()){
-                        Row(Modifier.align(CenterStart)) {
-                            FoodTimeText(n = pagerstate.currentPage)
-                            Text(text = foodlist[pagerstate.currentPage].name, color = Color.Gray,modifier = Modifier
-                                .padding(start = 15.dp, top = 20.dp), fontSize = 25.sp, fontWeight = FontWeight.Light)
+                if (TestRepository.getByDate()?.getFoodByID(pager) != null){
+                    Box(Modifier.fillMaxSize()) {
+                        Box(modifier = Modifier.fillMaxWidth()){
+                            Row(Modifier.align(CenterStart)) {
+                                FoodTimeText(n = pagerstate.currentPage)
+                                Text(text = TestRepository.getByDate()?.getFoodByID(pagerstate.currentPage)?.name?:"", color = Color.Gray,modifier = Modifier
+                                    .padding(start = 15.dp, top = 20.dp), fontSize = 25.sp, fontWeight = FontWeight.Light)
 
-                        }//mainText 구문
-                        onClick?.let{
-                            TextButton(onClick = onClick,Modifier.align(CenterEnd).padding(top=10.dp, end = 10.dp)) {
-                                Text(text = "더보기",
-                                    fontSize = 15.sp)
+                            }//mainText 구문
+                            onClick?.let{
+                                TextButton(onClick = onClick,
+                                    Modifier
+                                        .align(CenterEnd)
+                                        .padding(top = 10.dp, end = 10.dp)) {
+                                    Text(text = "더보기",
+                                        fontSize = 15.sp)
+                                }
+                            }
+                        }
+
+                        Canvas(modifier = Modifier
+                            .padding(start = 10.dp, top = 80.dp, end = 30.dp)
+                            .size(160.dp)){
+                            DrawLineGraph(40,20f,130f, Color.Red)
+                            DrawLineGraph(20,20f,250f, Color.Magenta)
+                            DrawLineGraph(50,20f,370f, Color.Cyan)
+                        }
+                        FoodScreenText(title = "당류", value =  0, offset = 0.dp, color = Color.Red,"g")
+                        FoodScreenText(title = "지방", value =  0, offset = 45.dp, color = Color.Magenta,"g")
+                        FoodScreenText(title = "단백질", value =  0, offset = 90.dp, color = Color.Cyan,"g")
+
+                    }
+                }else{
+                    Box(Modifier.fillMaxSize()) {
+                        Column(Modifier.align(Center), horizontalAlignment = Alignment.CenterHorizontally) {
+                            Text(text = "${FoodTime.values()[pager].kor}을 안 드셨나요?", fontSize = 24.sp)
+                            TextButton(onClick = {
+                                navController.navigate("AddFood/${pager}")
+                            }) {
+                                Text(text = "음식 추가하기", fontSize = 18.sp)
                             }
                         }
                     }
-
-                    Canvas(modifier = Modifier
-                        .padding(start = 10.dp, top = 80.dp, end = 30.dp)
-                        .size(160.dp)){
-                        DrawLineGraph(40,20f,130f, Color.Red)
-                        DrawLineGraph(20,20f,250f, Color.Magenta)
-                        DrawLineGraph(50,20f,370f, Color.Cyan)
-                    }
-                    FoodScreenText(title = "당류", value =  foodlist[pager].sugar, offset = 0.dp, color = Color.Red,"g")
-                    FoodScreenText(title = "지방", value =  foodlist[pager].fats, offset = 45.dp, color = Color.Magenta,"g")
-                    FoodScreenText(title = "단백질", value =  foodlist[pager].protein, offset = 90.dp, color = Color.Cyan,"g")
-
                 }
+                
             }
 
             Canvas(modifier = Modifier
@@ -182,10 +181,7 @@ fun AdviceCard(navController: NavController,time:Int) {
     ) {
         HorizontalPager(count = 3,modifier = Modifier.fillMaxSize(), userScrollEnabled = false, state = pagerstate) {
             Box(modifier = Modifier.fillMaxSize()){
-                val perAnime: Float by animateFloatAsState(if (it == pagerstate.currentPage) 1f else 0.000f, animationSpec = spring(
-                    dampingRatio = Spring.DampingRatioLowBouncy,
-                    stiffness = Spring.StiffnessLow
-                ))
+
                 //정적인 레이아웃
                 MainText(text = adviceFood[it], icon = if (it==0)Icons.Default.FreeBreakfast else if(it==1)Icons.Default.LunchDining else Icons.Default.DinnerDining,onclick = null)//mainText 구문
                 Text(text = "커피는 아침에 먹기 좋은 제일 좋은 음식입니다.커피는 아침에 먹기 좋은 제일 좋은 음식입니다.", Modifier
