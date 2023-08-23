@@ -10,28 +10,26 @@ import java.text.SimpleDateFormat
 import java.util.Date
 
 object TestRepository: ViewModel(),TodayRepositoryInterface {
-    private val repository:MutableLiveData<ArrayList<Today>> = MutableLiveData()
-    var id=0
+    private val repository:MutableLiveData<HashMap<String,Today>> = MutableLiveData()
     @SuppressLint("SimpleDateFormat")
     override fun addToday(breakfast:Food?,lunch:Food?,dinner:Food?){
         val sdf = SimpleDateFormat("'Date\n'dd-MM-yyyy")
         val currentDateAndTime = sdf.format(Date())
-
-        repository.value?.add(Today(id= id++ , day = currentDateAndTime , breakfast, lunch, dinner))
+        repository.value?.set(currentDateAndTime, Today(breakfast, lunch, dinner))
     }
     @SuppressLint("SimpleDateFormat")
     override fun getByDate(): Today? {
         val sdf = SimpleDateFormat("'Date\n'dd-MM-yyyy")
         val currentDateAndTime = sdf.format(Date())
-        return repository.value?.find { it.day == currentDateAndTime }
+        return repository.value?.get(currentDateAndTime)
     }
 
-    override fun getAllDay(): MutableList<Today> {
-        return repository.value!!
+    override fun getAllDay(): HashMap<String,Today>? {
+        return repository.value
     }
 
-    override fun updateDay(id:Int, today: Today){
-        repository.value?.get(id)==today
+    override fun updateDay(day:String, today: Today){
+        repository.value?.set(day,today)
     }
 }
 fun Today.getFoodByID(id:Int):Food?=when(id){
@@ -44,7 +42,7 @@ fun Today.getFoodByID(id:Int):Food?=when(id){
 interface TodayRepositoryInterface{
     fun addToday(breakfast:Food?,lunch:Food?,dinner:Food?)
     fun getByDate(): Today?
-    fun getAllDay() : MutableList<Today>
-    fun updateDay(id: Int,today: Today)
+    fun getAllDay() : HashMap<String,Today>?
+    fun updateDay(day: String,today: Today)
 
 }
