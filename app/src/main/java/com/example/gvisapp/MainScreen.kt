@@ -21,7 +21,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.example.gvisapp.food.card.NatureCard
+import com.example.gvisapp.food.cardCompo.NatureCard
 import com.example.gvisapp.composable.util.BottomNavBar
 import com.example.gvisapp.composable.util.MainText
 

@@ -93,6 +93,11 @@ fun DrawScope.DrawSlide(offsetX: Float,offsetY: Float,repeat:Int,ans:Int){
         n+=if (it == ans) 70f else 50f
     }
 }
+fun Color.getDark():Color = this.copy(
+    red = this.red * 0.8f,   // 빨간색 성분을 조절
+    green = this.green * 0.8f, // 초록색 성분을 조절
+    blue = this.blue * 0.8f  // 파란색 성분을 조절
+)
 @Composable
 fun BottomNavBar(n: MutableState<Int>,navController: NavController){
     NavigationBar(
@@ -189,6 +194,31 @@ fun SegmentButton(state: MutableState<Int>,list: List<String>){
                     Text(text = s, fontSize = 20.sp)
                 }
             }
+        }
+    }
+}
+@Composable
+fun BoxScope.NextButtons(num:Int,enable : Boolean,nextClick:()->Unit,backClick:()->Unit){
+    Row(modifier = Modifier
+        .align(Alignment.BottomEnd)) {
+        if (num!=0){
+            Button(
+                onClick = backClick, modifier = Modifier
+                    .padding(10.dp)
+                    .width(150.dp)
+                    .height(50.dp), enabled = true
+                , colors = ButtonDefaults.filledTonalButtonColors()
+            ) {
+                Text(text = "이전으로")
+            }
+        }
+        Button(
+            onClick = nextClick, modifier = Modifier
+                .padding(10.dp)
+                .width(150.dp)
+                .height(50.dp), enabled = enable
+        ) {
+            Text(text = "다음으로")
         }
     }
 }

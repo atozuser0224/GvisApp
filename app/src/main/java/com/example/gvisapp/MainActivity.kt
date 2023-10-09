@@ -9,15 +9,19 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.gvisapp.food.AddFoodScreen
 import com.example.gvisapp.food.AddNewFoodScreen
 import com.example.gvisapp.food.FoodScreen
+import com.example.gvisapp.login.LoginScreen
 import com.example.gvisapp.ui.theme.GvisAppTheme
 
 class MainActivity : ComponentActivity() {
@@ -50,9 +54,12 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     val bottomValue = remember {
-                        mutableStateOf(0)
+                        mutableIntStateOf(0)
                     }
-                    NavHost(navController, "SCREEN") {
+                    NavHost(navController, "LOGIN") {
+                        composable("LOGIN") {
+                            LoginScreen(navController)
+                        }
                         composable("SCREEN") {
                             MainScreen(bottomValue,navController)
                         }
@@ -71,4 +78,3 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-

@@ -1,7 +1,11 @@
-package com.example.gvisapp.food.card
+@file:OptIn(ExperimentalPagerApi::class, ExperimentalFoundationApi::class)
+
+package com.example.gvisapp.food.cardCompo
 
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,15 +14,21 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DinnerDining
 import androidx.compose.material.icons.filled.EnergySavingsLeaf
 import androidx.compose.material.icons.filled.FreeBreakfast
 import androidx.compose.material.icons.filled.LunchDining
+import androidx.compose.material.icons.filled.RestaurantMenu
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.RichTooltipBox
@@ -27,6 +37,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberRichTooltipState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -38,10 +49,12 @@ import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Alignment.Companion.End
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.gvisapp.R
 import com.example.gvisapp.composable.util.DrawLineGraph
 import com.example.gvisapp.composable.util.DrawPieGraph
 import com.example.gvisapp.composable.util.DrawSlide
@@ -49,15 +62,17 @@ import com.example.gvisapp.composable.FoodScreenText
 import com.example.gvisapp.composable.FoodTime
 import com.example.gvisapp.composable.FoodTimeText
 import com.example.gvisapp.composable.util.MainText
+import com.example.gvisapp.composable.util.NextButtons
 import com.example.gvisapp.composable.util.SegmentButton
-import com.example.gvisapp.test.TestRepository
-import com.example.gvisapp.test.getFoodByID
+import com.example.gvisapp.composable.util.underLine_TextField
 import com.example.gvisapp.ui.theme.BreakFast
 import com.example.gvisapp.ui.theme.Dinner
 import com.example.gvisapp.ui.theme.Lunch
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @Composable
@@ -99,12 +114,12 @@ fun NatureCard(navController: NavController,onClick:(()->Unit)?) {
                 count = 3,
                 state = pagerstate,
             ) { pager ->
-                if (TestRepository.getByDate()?.getFoodByID(pager) != null){
+                if (false){//test
                     Box(Modifier.fillMaxSize()) {
                         Box(modifier = Modifier.fillMaxWidth()){
                             Row(Modifier.align(CenterStart)) {
                                 FoodTimeText(n = pagerstate.currentPage)
-                                Text(text = TestRepository.getByDate()?.getFoodByID(pagerstate.currentPage)?.name?:"", color = Color.Gray,modifier = Modifier
+                                Text(text = "Test", color = Color.Gray,modifier = Modifier
                                     .padding(start = 15.dp, top = 20.dp), fontSize = 25.sp, fontWeight = FontWeight.Light)
 
                             }//mainText 구문
@@ -237,4 +252,67 @@ fun AdviceCard(navController: NavController,time:Int) {
         }
 
     }
+}
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun BoxScope.AddNewFoodScreen_firstCard(text : MutableState<String>,pagerState: PagerState) {
+    Column() {
+        HorizontalDivider()
+        MainText(text = stringResource(id = R.string.food), Icons.Default.RestaurantMenu,onclick = null)
+        Text(text = "어떤 음식을 드셨는지 입력해주세요.",Modifier.padding(10.dp), fontSize = 24.sp)
+
+    }
+    underLine_TextField(
+        text = text,
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(75.dp)
+            .align(Center)
+            .offset(y = (-150).dp),
+        label = {Text(text = "음식")},
+        icon = null,
+        shape = RoundedCornerShape(15.dp),
+        onClick = {},
+    ){
+        text.value = it
+    }
+    NextButtons(num = 0, enable = text.value!="", nextClick = {
+        CoroutineScope(Dispatchers.Default).launch{
+            pagerState.scrollToPage(1)
+        }
+    }) {
+    }
+}
+@Composable
+fun BoxScope.AddNewFoodScreen_secondCard(text : MutableState<String>,pagerState: PagerState) {
+    Column() {
+        HorizontalDivider()
+        MainText(text = stringResource(id = R.string.food), Icons.Default.RestaurantMenu,onclick = null)
+        Text(text = "어떤 음식을 드셨는지 입력해주세요.",Modifier.padding(10.dp), fontSize = 24.sp)
+
+    }
+    underLine_TextField(
+        text = text,
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(75.dp)
+            .align(Center)
+            .offset(y = (-150).dp),
+        label = {Text(text = "음식")},
+        icon = null,
+        shape = RoundedCornerShape(15.dp),
+        onClick = {},
+    ){
+        text.value = it
+    }
+    NextButtons(num = 1, enable = text.value!="", nextClick = {
+        CoroutineScope(Dispatchers.Default).launch{
+            pagerState.scrollToPage(2)
+        }
+    }) {
+        CoroutineScope(Dispatchers.Default).launch{
+            pagerState.scrollToPage(0)
+        }
+    }
+
 }

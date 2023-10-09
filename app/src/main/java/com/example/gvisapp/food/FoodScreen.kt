@@ -26,9 +26,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.example.gvisapp.food.card.AdviceCard
-import com.example.gvisapp.food.card.KcalCard
-import com.example.gvisapp.food.card.NatureCard
+import com.example.gvisapp.food.cardCompo.AdviceCard
+import com.example.gvisapp.food.cardCompo.KcalCard
+import com.example.gvisapp.food.cardCompo.NatureCard
 
 import com.example.gvisapp.composable.util.BottomNavBar
 import com.example.gvisapp.composable.NavRow

@@ -34,7 +34,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.example.gvisapp.Food
 import com.example.gvisapp.composable.JamoUtils
 import com.example.gvisapp.composable.util.BottomNavBar
 import com.example.gvisapp.composable.setTimeDropdownMenuBox
@@ -43,7 +42,7 @@ import com.example.gvisapp.composable.addFoodListItemCard
 import com.example.gvisapp.composable.isEqualKorean
 import com.example.gvisapp.composable.util.addFocusCleaner
 import com.example.gvisapp.composable.util.def_TextField
-import com.example.gvisapp.test.TestRepository
+import com.example.gvisapp.data.Food
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -79,15 +78,7 @@ fun AddFoodScreen(bottomValue: MutableState<Int>, where: Int?, navController: Na
                 .addFocusCleaner(focusManager)
         ) {
             //더미데이터 생성
-            val foodList = listOf(
-                Food("햄버거", 0f, 0f, 0f, 0f),
-                Food("스파게티", 0f, 0f, 0f, 0f),
-                Food("짜장면", 0f, 0f, 0f, 0f),
-                Food("햄버거", 0f, 0f, 0f, 0f),
-                Food("스파게티", 0f, 0f, 0f, 0f),
-                Food("짜장면", 0f, 0f, 0f, 0f),
-
-            )
+            val foodList:ArrayList<Food> = ArrayList<Food>()
             val scoreList = remember {
                 mutableListOf(0, 0, 0, 0, 0, 0, 0, 0)
             }
@@ -125,16 +116,12 @@ fun AddFoodScreen(bottomValue: MutableState<Int>, where: Int?, navController: Na
                             search.value =""
                             focusManager.clearFocus()
                     }) {
-                        var n=0
-                        JamoUtils.splitOne(it[0].toString()).forEach {its->
-                            if (its != "")n+=1
-                        }
+
                         search.value = it
-                        if (n>=2){
-                            foodList.forEachIndexed { index, food ->
-                                scoreList[index] = search.value.isEqualKorean(food.name)
-                            }
+                        foodList.forEachIndexed { index, food ->
+                            scoreList[index] = search.value.isEqualKorean(food.name)
                         }
+
 
 
                     }
@@ -180,14 +167,7 @@ fun AddFoodScreen(bottomValue: MutableState<Int>, where: Int?, navController: Na
                         if (whoClick.value == 21000000){
                             navController.navigate("AddNewFood/${where}")
                         }else{
-                            if (TestRepository.getByDate()==null){
-                                when(selectTime.value){
-                                    "아침" ->TestRepository.addToday(foodList.mapIndexed{ index, food ->  index to food}.filter { scoreList[it.first] > 0 }.sortedWith(compareBy { scoreList[it.first] }).reversed()[whoClick.value].second,null,null)
-                                    "점심" ->TestRepository.addToday(null,foodList.mapIndexed{ index, food ->  index to food}.filter { scoreList[it.first] > 0 }.sortedWith(compareBy { scoreList[it.first] }).reversed()[whoClick.value].second,null)
-                                    "저녁" ->TestRepository.addToday(null,null,foodList.mapIndexed{ index, food ->  index to food}.filter { scoreList[it.first] > 0 }.sortedWith(compareBy { scoreList[it.first] }).reversed()[whoClick.value].second,)
-                                }
-                            }else{
-                            }
+                            navController.popBackStack()
                         }
                     }, modifier = Modifier
                         .align(BottomEnd)
