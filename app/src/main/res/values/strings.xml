@@ -4,4 +4,11 @@
     <string name="health">건강</string>
     <string name="food">음식</string>
     <string name="moreInfo">더 보기</string>
+    <string-array name="sleep_notes_array">
+        <item>I slept great!</item>
+        <item>I got woken up</item>
+        <item>Struggled to sleep</item>
+        <item>Much needed sleep</item>
+        <item>Restful sleep</item>
+    </string-array>
 </resources>

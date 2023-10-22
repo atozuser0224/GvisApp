@@ -8,6 +8,11 @@ data class Result<T>(
     val msg: String,
     val success: Boolean
 )
+data class CommonResult(
+    val code: Int,
+    val msg: String,
+    val success: Boolean
+)
 
 data class UserData(
     val authorities: Map<String, Any>,
@@ -59,6 +64,11 @@ data class SingleResult<T>(
     val msg: String?,
     val success: Boolean
 )
+data class IsMailRequest(
+    val code: String?,
+    val mail: String?
+)
+
 data class UserSignInRequest(
     val email: String,
     val password: String

@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import com.google.gson.GsonBuilder
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -17,3 +18,21 @@ val retrofit: Retrofit = Retrofit.Builder()
 
 // API 서비스 인터페이스 생성
 val apiService: HealthGptApi = retrofit.create(HealthGptApi::class.java)
+
+fun IsMailEqualCode(code:String,mail:String): CommonResult? {
+    var call = apiService.isMail(IsMailRequest(code,mail))
+    var result : CommonResult?=null
+    call.enqueue(object : Callback<CommonResult> {
+        override fun onResponse(call: Call<CommonResult>, response: Response<CommonResult>) {
+
+            result = response.body()!!
+
+        }
+
+        override fun onFailure(call: Call<CommonResult>, t: Throwable) {
+            Log.d("error",call.toString())
+        }
+
+    })
+    return result
+}

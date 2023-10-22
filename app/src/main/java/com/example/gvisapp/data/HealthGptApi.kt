@@ -12,11 +12,10 @@ import retrofit2.http.POST
 import retrofit2.http.Query
 
 interface HealthGptApi {
-    @Headers("Content-Type: application/json","Accept: text/plain")
     @POST("mail")
     fun getMail(
         @Body mail: MailRequest
-    ): Call<String>
+    ): Call<CommonResult>
 
     @GET("users")
     fun getUsers():Call<Result<UserData>>
@@ -24,4 +23,9 @@ interface HealthGptApi {
     fun SignIn(
         @Body signInRequest: UserSignInRequest
     ):Call<SingleResult<String?>>
+    @Headers("Content-Type: application/json","Accept: application/json")
+    @POST("equalMailcode")
+    fun isMail(
+        @Body isMailRequest: IsMailRequest
+    ):Call<CommonResult>
 }
